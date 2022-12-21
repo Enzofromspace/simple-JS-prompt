@@ -32,9 +32,14 @@ function ask(options){
       console.log(popup.firstChild);
       popup.firstElementChild.appendChild(skipButton);
       //listen for a click on cancel button
+      skipButton.addEventListener('click', function(){
+        resolve(null);
+        destroyPopup(popup);
+        }, {once: true}
+      );
     }
     //listen for submit
-    popup.addEventListener('submit', function(e){
+    popup.addEventListener('submit', function(e) {
       e.preventDefault();
       console.log('submitter');
       resolve(e.target.input.value);
@@ -49,5 +54,15 @@ function ask(options){
     popup.classList.add('open');
   });
 }
+// select all buttons with questions
+async function askQuestion(e){
+  const button = e.currentTarget;
+  const cancel = 'cancel' in button.dataset;
 
-//console.log(ask({title: "works?", cancel: true}));
+  const answer = await ask({ title: button.dataset.question, cancel });
+  console.log(answer);
+}
+const buttons = document.querySelectorAll('[data-question]');
+buttons.forEach(button => button.addEventListener('click', askQuestion));
+
+console.log(ask({title: "works?", cancel: true}));
