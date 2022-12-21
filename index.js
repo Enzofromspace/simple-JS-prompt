@@ -18,9 +18,11 @@ function ask(options){
     //create a pop-up with prompt fields
     const popup = document.createElement('form');
     popup.classList.add('popup');
-    popup.insertAdjacentHTML('afterbegin', `<fieldset>
+    popup.insertAdjacentHTML(
+      'afterbegin', 
+      `<fieldset>
          <label>${options.title}</label>
-         <input type="text name="input"/>
+         <input type="text" name="input"/>
          <button type="submit">Submit</button>
       </fieldset>
     `);
@@ -35,16 +37,20 @@ function ask(options){
       skipButton.addEventListener('click', function(){
         resolve(null);
         destroyPopup(popup);
-        }, {once: true}
+        }, {once: true }
       );
     }
     //listen for submit
-    popup.addEventListener('submit', function(e) {
-      e.preventDefault();
-      console.log('submitter');
-      resolve(e.target.input.value);
-      destroyPopup(popup); 
-    }, {once: true}); 
+    popup.addEventListener(
+      'submit', 
+      function(e) {
+        e.preventDefault();
+        console.log('submitter');
+        resolve(e.target.input.value);
+        destroyPopup(popup); 
+    }, 
+    {once: true}
+    ); 
     //on submit, resolved the data to inputs 
 
     //insert the popup into the DOM
@@ -59,10 +65,13 @@ async function askQuestion(e){
   const button = e.currentTarget;
   const cancel = 'cancel' in button.dataset;
 
-  const answer = await ask({ title: button.dataset.question, cancel });
+  const answer = await ask({ 
+    title: button.dataset.question, 
+    cancel, 
+  });
   console.log(answer);
 }
 const buttons = document.querySelectorAll('[data-question]');
 buttons.forEach(button => button.addEventListener('click', askQuestion));
 
-console.log(ask({title: "works?", cancel: true}));
+//console.log(ask({title: "works?", cancel: true}));
