@@ -74,4 +74,29 @@ async function askQuestion(e){
 const buttons = document.querySelectorAll('[data-question]');
 buttons.forEach(button => button.addEventListener('click', askQuestion));
 
-//console.log(ask({title: "works?", cancel: true}));
+// this bit of code below will be really handy for a future project
+// in a pixel style game, you can use this asyncMap function to list questions in a row
+//then store that data
+
+const questions = [
+  {title: 'your name?', cancel: true },
+  {title: 'your age?'},
+  {title: 'your quest?'},
+];
+
+async function asyncMap(array, callback) {
+  const results = []; // array to store / push answers into
+
+  for (const item of array) {
+    const result = await callback(item);
+    results.push(result); 
+  }
+  return results;
+}
+
+async function go(){
+  const answers = await asyncMap(questions, ask);
+  console.log(answers);
+}
+
+go();
