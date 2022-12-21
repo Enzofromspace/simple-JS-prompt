@@ -1,7 +1,15 @@
 // Import stylesheets
 import './style.css';
-function wait(ms = 0){
+
+function wait(ms = 0) {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function destroyPopup(popup){
+  popup.classList.remove('open');
+  await wait(1000);
+  popup.remove();
+  popup = null; 
 }
 
 // Write Javascript code!
@@ -20,15 +28,18 @@ function ask(options){
     if(options.cancel){
       const skipButton = document.createElement('button');
       skipButton.type = 'button';
-      skipButton.textContent = 'Cancel?';
-      popup.firstElementChild.append(skipButton);
+      skipButton.textContent = 'Cancel'
+      console.log(popup.firstChild);
+      popup.firstElementChild.appendChild(skipButton);
       //listen for a click on cancel button
     }
     //listen for submit
     popup.addEventListener('submit', function(e){
       e.preventDefault();
-      console.log('submitted');
-    });
+      console.log('submitter');
+      resolve(e.target.input.value);
+      destroyPopup(popup); 
+    }, {once: true}); 
     //on submit, resolved the data to inputs 
 
     //insert the popup into the DOM
@@ -39,4 +50,4 @@ function ask(options){
   });
 }
 
-console.log(ask({title: "works?", cancel: true}));
+//console.log(ask({title: "works?", cancel: true}));
